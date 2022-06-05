@@ -1,6 +1,6 @@
 import curses
 
-class curseMenu():
+class Menu():
     def __init__(self, window):
 
         self.menuItems = [ "Try Again", "Exit" ]
@@ -53,7 +53,7 @@ class curseMenu():
                     self.selector = len(self.menuItems) - 1
 
     def render(self, keypress):
-        '''Renders menu and handler input inside passed window object'''
+        '''Renders menu and handles input inside passed window object'''
         if keypress == 10:
             return self.runAction()
         self.updateSelector(keypress)
