@@ -11,10 +11,10 @@
     the next learning experience.
     Thank you for playing my first ever game!'''
 
-import curses
 import time
+import curses
 from curses import wrapper
-import snakemanager
+from snakemanager import *
 from scoretracker import *
 from menumanager import *
 
@@ -31,7 +31,7 @@ def initializeSettings( stdscr ):
     snake_window = stdscr.subwin( h-2,w-2,1,1 )
 
     #Initializes snakemanager
-    snake = snakemanager.snake(snake_window)
+    snake = Snake(snake_window)
 
     #initializes score tracker
     score = scoreTracker()
