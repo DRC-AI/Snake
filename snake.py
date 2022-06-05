@@ -1,110 +1,110 @@
+import curses 
 
-''' Hello, welcome to the Snake game by Oskar Lundmark!
-    I wrote this game as a learning experience,
-    i know there are much to be improved but it
-    all works and has all the funtionality
-    i set out to create. 
+class Snake():
 
-    Maybe in the future i will come back and impove
-    the readability and funtionality,
-    but really now i just want to hop on
-    the next learning experience.
-    Thank you for playing my first ever game!'''
+    def __init__(self, game_window):
+        '''Sets default settings to snake object'''
 
-import time
-import curses
-from curses import wrapper
-from snakemanager import *
-from scoretracker import *
-from menumanager import *
+        self.positiony, self.positionx = game_window.getmaxyx()
 
-def initializeSettings( stdscr ):
+        #centers the position of snake to middle of passed window
+        self.positiony = self.positiony // 2
+        self.positionx = self.positionx // 2 
 
-    #initialize screen
-    curses.noecho()
-    curses.curs_set(0)
+        #initializes the snake body list using its position properties
+        self.body = [ [self.positionx, self.positiony], [self.positionx - 1, self.positiony  ] ]
+        #initializes direction
+        self.direction = ""
 
-    #Get Height and Width och terminal window 
-    h,w = stdscr.getmaxyx()
+        #initializes isAlive property to True
+        self.isAlive = True
 
-    #Create window to house the actual game
-    snake_window = stdscr.subwin( h-2,w-2,1,1 )
+        #initializes game_window property to passed window
+        self.game_window = game_window
 
-    #Initializes snakemanager
-    snake = Snake(snake_window)
+    def checkIfBackwards(self, keypress) :
+        '''Makes sure the user cant reverse direction,
+        and can only turn or continue forward.'''
 
-    #initializes score tracker
-    score = scoreTracker()
-
-    #Initialize snake window
-    snake_window.border()
-    snake_window.nodelay(True)
-    snake_window.keypad(True)
-
-    #initialize point
-    score.generatePoint(snake_window)
-
-    #Initialize Menu
-    menu = curseMenu(snake_window)
-
-    return (snake_window, snake, score, menu)
-
-
-def gameOn(snake_window, snake, score, menu):
-
-        while snake.isAlive:
-            keypress = snake_window.getch()
-            snake.move(keypress) #Updates direction and moves the snake one step.
+        notAllowed = {
+                curses.KEY_UP : curses.KEY_DOWN,
+                curses.KEY_DOWN : curses.KEY_UP,
+                curses.KEY_RIGHT : curses.KEY_LEFT,
+                curses.KEY_LEFT : curses.KEY_RIGHT
+                }
         
-            if score.isPoint(snake.body[0]): #Checks if snake Head and point overlap
-                score.increaseScore() 
-                snake.increaseBodyLength()
-                score.generatePoint(snake_window)
+        if keypress == notAllowed.get(self.direction):
+            return False
+        else:
+            return True
 
-            if len(snake.body) > 2 : 
+    def updateDirection(self, keypress):
+        '''Used to update direction of head.
+        Needs keypress in curse.KEY_DIRECTION format.'''
 
-                snake.canibalCheck() #Checks if snake eats itself
+        #Only updates if key i valid
+        validKeys = [ curses.KEY_LEFT,curses.KEY_RIGHT, curses.KEY_UP, curses.KEY_DOWN ]
+        
+        if self.checkIfBackwards(keypress):
 
-            snake.isContained() #Checks if snake is within bounds
+            if keypress not in validKeys:
+                return self.direction
+            else :
+                self.direction = keypress
+                return self.direction
+        else:
+            return self.direction
 
-            snake.render()
-            score.render(snake_window)
+    def moveForward(self):
+        '''Makes the snake move forward 1 step in the facing direction
+        and updates the body list'''
+        
+        if self.direction == curses.KEY_LEFT:
+            self.positionx = self.positionx - 1
+        elif self.direction == curses.KEY_RIGHT:
+            self.positionx = self.positionx + 1
+        elif self.direction == curses.KEY_UP:
+            self.positiony = self.positiony - 1
+        elif self.direction == curses.KEY_DOWN:
+            self.positiony = self.positiony + 1
 
-            snake_window.refresh()
-            snake_window.erase()
-            snake_window.border()
-            snake_window.addstr( 1, 2 ,"Your score:" + " " + str(score.score))
-            curses.flushinp() #Flushes input so it doesnt add upp while curses "naps".
-            curses.napms(100) #Makes the loop "nap", decrease to make snake move faster.
+        self.updateBodyPos(self.positionx, self.positiony)
 
+    def updateBodyPos(self, x, y ):
+        '''Adds new position as head of body and removes last element in body list'''
 
-def main(stdscr):
-    
-    stdscr = curses.initscr() #Initializes the main curses window
+        newHead = [x,y]
+        
+        self.body.insert( 0, newHead ) #inserts new head
+        self.body.pop(-1) #removes last element
 
-    h, w = stdscr.getmaxyx() #Used to adjust the game size based on the size of terminal window
+    def increaseBodyLength(self):
+        '''Used in conjution with a point increase.
+        adds a copy of the last element in body list'''
 
-    snake_window, snake, score, menu = initializeSettings(stdscr) 
+        self.body.insert(-1, self.body[-1])
 
-    runGame = True
-    
-    #Game loop
-    while runGame:
+    def move(self, keypress):
+        '''Executes the the ingame snake logic to for the renderer to use.'''
 
-        gameOn(snake_window, snake, score, menu) #the Main game loop
+        self.updateDirection(keypress)
+        self.moveForward()
+        
+    def render(self):
+        '''renders snake in the passed window object'''
 
-        while True: #Executes when main game loop exits
+        for part in self.body:
+            self.game_window.addstr(part[1], part[0], chr(11035), curses.A_REVERSE)
 
-            gameOverMessage = "Game Over"
-            scoreMessage = "Your Score: " + str(score.score)
-            stdscr.addstr( (h // 2) - 3,(w // 2) - (len(gameOverMessage) // 2), gameOverMessage) 
-            stdscr.addstr( (h // 2) - 2,(w // 2) - (len(scoreMessage) // 2), scoreMessage) 
-            snake.isAlive = menu.render(snake_window.getch()) #Restores isAlive variable if player wants to restart.
-            
-            if snake.isAlive:
-                
-                snake_window, snake, score, menu = initializeSettings(stdscr) #Resets everything
+    def canibalCheck(self):
+        if self.body[0] in self.body[1:]:
+            self.isAlive = False
 
-                gameOn(snake_window, snake, score, menu) #Runs the main loop in case snake is alive again.
-   
-wrapper(main) 
+    def isContained(self):
+        '''Check if snake head is cointaned, returns False if out of bounds'''
+
+        windowHeight, windowWidth = self.game_window.getmaxyx()
+        if self.body[0][0] < 1 or self.body[0][0] > windowWidth - 2:
+            self.isAlive = False
+        if self.body[0][1] < 1 or self.body[0][1] > windowHeight - 2:
+            self.isAlive = False

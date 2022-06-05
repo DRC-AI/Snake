@@ -14,9 +14,9 @@
 import time
 import curses
 from curses import wrapper
-from snakemanager import *
-from scoretracker import *
-from menumanager import *
+from snake import *
+from score import *
+from menu import *
 
 def initializeSettings( stdscr ):
 
