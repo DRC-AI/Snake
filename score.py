@@ -1,6 +1,6 @@
 import random
 
-class scoreTracker():
+class Score():
 
     def __init__(self, window):
         self.positionx = 0
@@ -8,31 +8,31 @@ class scoreTracker():
         self.score = 0
         self.window = window
     
-    def isPoint(self, snakePosition):
+    def is_point(self, snakePosition):
         '''checks if the snake head overlaps with point position'''
         
-        pointPosition = self.getPosition()
+        pointPosition = self.get_position()
 
         if pointPosition == snakePosition:
             return True
         else :
             return False
 
-    def increaseScore(self):
+    def increase_score(self):
         '''Increases score by 1'''
 
         self.score = self.score + 100
 
 
 
-    def getPosition(self):
+    def get_position(self):
         '''This functions returns position in a tuple'''
 
         position = [ self.positionx , self.positiony ]
 
         return position
 
-    def generatePoint(self):
+    def generate_point(self):
         '''Generates a point with random position'''
 
         y, x = self.window.getmaxyx()

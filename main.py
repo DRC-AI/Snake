@@ -35,8 +35,8 @@ def initializeSettings( stdscr ):
     snake_window.nodelay(True)
     snake_window.keypad(True)
 
-    score = scoreTracker(snake_window)
-    score.generatePoint()
+    score = Score(snake_window)
+    score.generate_point()
 
     menu = curseMenu(snake_window)
 
@@ -49,10 +49,10 @@ def gameOn(snake_window, snake, score, menu):
             keypress = snake_window.getch()
             snake.move(keypress) #Updates direction and moves the snake one step.
         
-            if score.isPoint(snake.body[0]): #Checks if snake Head and point overlap
-                score.increaseScore() 
+            if score.is_point(snake.body[0]): #Checks if snake Head and point overlap
+                score.increase_score() 
                 snake.increaseBodyLength()
-                score.generatePoint()
+                score.generate_point()
 
             if len(snake.body) > 2 : 
 
