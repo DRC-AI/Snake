@@ -35,8 +35,8 @@ def initializeSettings( stdscr ):
     snake_window.nodelay(True)
     snake_window.keypad(True)
 
-    score = scoreTracker()
-    score.generatePoint(snake_window)
+    score = scoreTracker(snake_window)
+    score.generatePoint()
 
     menu = curseMenu(snake_window)
 
@@ -52,7 +52,7 @@ def gameOn(snake_window, snake, score, menu):
             if score.isPoint(snake.body[0]): #Checks if snake Head and point overlap
                 score.increaseScore() 
                 snake.increaseBodyLength()
-                score.generatePoint(snake_window)
+                score.generatePoint()
 
             if len(snake.body) > 2 : 
 
