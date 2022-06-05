@@ -14,3 +14,6 @@ class Screen():
         self.game_window.nodelay(True)
         self.game_window.keypad(True)
 
+    def get_keypress(self):
+        
+        return self.game_window.getch()

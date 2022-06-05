@@ -19,6 +19,22 @@ from score import *
 from menu import *
 from screen import *
 
+'''Checklista
+    * Skapa play funktion som itererar genom gameloopen
+    * Skapa paus funktion som stoppar spel logiken
+    * Skapa terminate funktion som stänger spelet
+    '''
+
+def update_state(state)
+    
+    states = {
+            1 : play,
+            2 : paus,
+            3 : terminate
+            }
+    
+    states[state]()
+
 def main(screen):
     
     #Initialization
@@ -26,5 +42,5 @@ def main(screen):
     snake = Snake(screen.game_window)
     menu = Menu(screen.game_window)
     score = Score(screen.game_window)
-    
+
 wrapper(main) 
