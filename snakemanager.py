@@ -1,11 +1,11 @@
 import curses 
 
-class snake():
+class Snake():
 
-    def __init__(self, gameWindow):
+    def __init__(self, game_window):
         '''Sets default settings to snake object'''
 
-        self.positiony, self.positionx = gameWindow.getmaxyx()
+        self.positiony, self.positionx = game_window.getmaxyx()
 
         #centers the position of snake to middle of passed window
         self.positiony = self.positiony // 2
@@ -19,8 +19,8 @@ class snake():
         #initializes isAlive property to True
         self.isAlive = True
 
-        #initializes gameWindow property to passed window
-        self.gameWindow = gameWindow
+        #initializes game_window property to passed window
+        self.game_window = game_window
 
     def checkIfBackwards(self, keypress) :
         '''Makes sure the user cant reverse direction,
@@ -94,7 +94,7 @@ class snake():
         '''renders snake in the passed window object'''
 
         for part in self.body:
-            self.gameWindow.addstr(part[1], part[0], chr(11035), curses.A_REVERSE)
+            self.game_window.addstr(part[1], part[0], chr(11035), curses.A_REVERSE)
 
     def canibalCheck(self):
         if self.body[0] in self.body[1:]:
@@ -103,7 +103,7 @@ class snake():
     def isContained(self):
         '''Check if snake head is cointaned, returns False if out of bounds'''
 
-        windowHeight, windowWidth = self.gameWindow.getmaxyx()
+        windowHeight, windowWidth = self.game_window.getmaxyx()
         if self.body[0][0] < 1 or self.body[0][0] > windowWidth - 2:
             self.isAlive = False
         if self.body[0][1] < 1 or self.body[0][1] > windowHeight - 2:
