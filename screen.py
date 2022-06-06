@@ -7,13 +7,13 @@ class Screen():
         self.screen_height, self.screen_width = self.screen.getmaxyx()
         self.game_window = self.screen.subwin(self.screen_height-1, self.screen_width-1, 1, 1)
     
-    def initialize_screen():
+    def initialize_screen(self):
         curses.noecho()
         curses.curs_set(0)
         self.game_window.border()
         self.game_window.nodelay(True)
         self.game_window.keypad(True)
 
-    def get_keypress(self):
+    def get_key(self):
         
         return self.game_window.getch()
