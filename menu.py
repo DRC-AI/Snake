@@ -8,7 +8,7 @@ class Menu():
         self.window = window
         self.selector = 0 #indicates wich button is selected
     
-    def runAction(self):
+    def run_action(self):
         '''Runs associated action for menu item'''
         
         menuActions = {
@@ -18,14 +18,14 @@ class Menu():
         game = menuActions[self.menuItems[self.selector]]()
         return game
 
-    def tryAgain(self):
+    def restart(self):
         game = True
         return game
 
     def exit(self):
         quit()
 
-    def displayMenu(self):
+    def display_menu(self):
         '''Displays menu in provided window'''
 
         y, x  = self.window.getmaxyx()
@@ -39,7 +39,7 @@ class Menu():
             else:
                 self.window.addstr( middle_y + self.menuItems.index(i), middle_x - (len(i) // 2), i)
 
-    def updateSelector(self, keypress):
+    def update_selector(self, keypress):
         '''updates selector'''
         
         if keypress == curses.KEY_UP:
@@ -48,9 +48,9 @@ class Menu():
                 self.selector = 0
 
         elif keypress == curses.KEY_DOWN:
-                self.selector = self.selector + 1
-                if self.selector > len(self.menuItems) - 1:
-                    self.selector = len(self.menuItems) - 1
+            self.selector = self.selector + 1
+            if self.selector > len(self.menuItems) - 1:
+                self.selector = len(self.menuItems) - 1
 
     def render(self, keypress):
         '''Renders menu and handles input inside passed window object'''
