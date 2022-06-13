@@ -12,7 +12,7 @@ class Snake():
         self.direction = ""
         self.is_alive = True
     
-    def reverse(self, key):
+    def reversed(self, key):
 
         reverse_check = {
             curses.KEY_UP : curses.KEY_DOWN,
@@ -23,7 +23,7 @@ class Snake():
         
         return key == reverse_check.get(self.direction)
     
-    def valid_key(self, key)
+    def valid_key(self, key):
         
         valid_keys = [
             curses.KEY_LEFT,
@@ -36,7 +36,7 @@ class Snake():
 
     def update_direction(self, key):
 
-        if not self.reverse(key) and self.valid_key(key):
+        if not self.reversed(key) and self.valid_key(key):
             self.direction = key
             return self.direction
         else:
@@ -58,15 +58,21 @@ class Snake():
         self.body.insert(0, newHead) 
         self.body.pop(-1)
 
+        return self.body
+
     def increase_length(self):
 
         self.body.insert(-1, self.body[-1])
-        
-    def collision_check(self):
 
-        if self.body[0][0] < 1 or self.body[0][0] > self.max_height:
-            return False
-        if self.body[0][1] < 1 or self.body[0][1] > self.max_width:
-            return False
-        if self.body[0] in self.body[1:]:
+        return self.body
+        
+    def collision_check(self, position_x, position_y):
+
+        if position_x < 1 or position_x > self.max_height:
+            return True
+        elif position_y < 1 or position_y > self.max_width:
+            return True
+        elif (position_x, position_y) in self.body[1:]:
+            return True
+        else:
             return False
