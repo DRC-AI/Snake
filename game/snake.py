@@ -4,20 +4,15 @@ class Snake():
 
     def __init__(self, max_height, max_width):
 
+        self.max_height = max_height
+        self.max_width = max_width
         self.position_y = max_height // 2
         self.position_x = max_width // 2 
         self.body = [ [self.position_x, self.position_y], [self.position_x - 1, self.position_y  ] ]
         self.direction = ""
         self.is_alive = True
-
-    def update_direction(self, keypress):
-        
-        valid_keys = [
-            curses.KEY_LEFT,
-            curses.KEY_RIGHT,
-            curses.KEY_UP,
-            curses.KEY_DOWN
-                ]
+    
+    def reverse(self, key):
 
         reverse_check = {
             curses.KEY_UP : curses.KEY_DOWN,
@@ -26,13 +21,27 @@ class Snake():
             curses.KEY_LEFT : curses.KEY_RIGHT
                 }
         
-        if keypress == reverse_check.get(self.direction):
-            return self.direction
-        elif keypress not in validKeys:
-            return self.direction
-        else :
-            return self.direction = keypress
+        return key == reverse_check.get(self.direction)
+    
+    def valid_key(self, key)
+        
+        valid_keys = [
+            curses.KEY_LEFT,
+            curses.KEY_RIGHT,
+            curses.KEY_UP,
+            curses.KEY_DOWN
+                ]
+        
+        return key in valid_keys
 
+    def update_direction(self, key):
+
+        if not self.reverse(key) and self.valid_key(key):
+            self.direction = key
+            return self.direction
+        else:
+            return self.direction
+        
     def move_forward(self):
 
         if self.direction == curses.KEY_LEFT:
@@ -53,11 +62,11 @@ class Snake():
 
         self.body.insert(-1, self.body[-1])
         
-    def collision_check(self, windowHeight, windowWidth):
+    def collision_check(self):
 
-        if self.body[0][0] < 1 or self.body[0][0] > windowWidth - 2:
+        if self.body[0][0] < 1 or self.body[0][0] > self.max_height:
             return False
-        if self.body[0][1] < 1 or self.body[0][1] > windowHeight - 2:
+        if self.body[0][1] < 1 or self.body[0][1] > self.max_width:
             return False
         if self.body[0] in self.body[1:]:
             return False
