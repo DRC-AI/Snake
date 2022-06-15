@@ -23,6 +23,7 @@ class TestSnake(unittest.TestCase):
     def test_update_direction(self):
         self.assertEqual(self.snake.update_direction(curses.KEY_UP), curses.KEY_DOWN)
         self.assertEqual(self.snake.update_direction(curses.KEY_LEFT), curses.KEY_LEFT)
+        self.assertEqual(self.snake.update_direction(curses.KEY_RIGHT), curses.KEY_LEFT)
     
     def test_move_forward(self):
         self.assertEqual(self.snake.move_forward(), self.snake.body)

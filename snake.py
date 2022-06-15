@@ -9,7 +9,8 @@ class Snake():
         self.position_y = max_height // 2
         self.position_x = max_width // 2 
         self.body = [ [self.position_x, self.position_y], [self.position_x - 1, self.position_y  ] ]
-        self.direction = ""
+        self.head = self.body[0]
+        self.direction = curses.KEY_UP
         self.is_alive = True
     
     def reversed(self, key):
@@ -55,6 +56,7 @@ class Snake():
 
         newHead = [self.position_x,self.position_y]
         
+        self.head = newHead
         self.body.insert(0, newHead) 
         self.body.pop(-1)
 
@@ -66,7 +68,9 @@ class Snake():
 
         return self.body
         
-    def collision_check(self, position_x, position_y):
+    def collision_check(self, head):
+
+        position_x = head[0]
 
         if position_x < 1 or position_x > self.max_height:
             return True
@@ -76,3 +80,5 @@ class Snake():
             return True
         else:
             return False
+    
+

@@ -18,13 +18,6 @@ class Menu():
         game = menuActions[self.menuItems[self.selector]]()
         return game
 
-    def restart(self):
-        game = True
-        return game
-
-    def exit(self):
-        quit()
-
     def display_menu(self):
         '''Displays menu in provided window'''
 
