@@ -9,7 +9,7 @@ class Snake():
         self.position_y = max_height // 2
         self.position_x = max_width // 2 
         self.body = [ [self.position_x, self.position_y], [self.position_x - 1, self.position_y  ] ]
-        self.head = self.body[0]
+        self.head = (self.body[0][0], self.body[0][1])
         self.direction = curses.KEY_UP
         self.is_alive = True
     
@@ -68,15 +68,13 @@ class Snake():
 
         return self.body
         
-    def collision_check(self, head):
-
+    def collision_check(self):
+        
+        head = self.body[1]
         position_x = head[0]
+        position_y = head[1]
 
-        if position_x < 1 or position_x > self.max_height:
-            return True
-        elif position_y < 1 or position_y > self.max_width:
-            return True
-        elif (position_x, position_y) in self.body[1:]:
+        if head in self.body[1:]:
             return True
         else:
             return False
