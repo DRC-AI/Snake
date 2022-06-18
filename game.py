@@ -5,6 +5,7 @@ from score import Score
 class Game():
 
     def __init__(self):
+        
         self.screen = curses.initscr()
         self.screen.keypad(True)
         curses.curs_set(0)
@@ -16,25 +17,31 @@ class Game():
         self.score = Score(self.max_height, self.max_width)
 
     def render_snake(self):
-        key = self.screen.getch()        
+        
+        key = self.screen.getch()       
         self.snake.update_direction(key)
         self.snake.move_forward()
 
         for part in self.snake.body:
-            self.screen.addch(part[1], part[0], chr(11035), curses.A_REVERSE)
+            try:
+                self.screen.addch(part[1], part[0], chr(11035), curses.A_REVERSE)
+            except:
+                continue
+        
+    def render_point(self):
         
         self.screen.refresh()
-        if not self.snake.collision_check():
-            exit()
-
-        curses.flushinp()
-    
-    def render_point(self):
-        self.screen.refresh()
         self.screen.addch(self.score.position_y, self.score.position_x, "*")
-
-    def on(self, state):
-        while state:
+    
+    def render_score(self):
+        
+        score_message = "Score: " + str(self.score.score)
+        self.screen.addstr(0,0, score_message)
+        self.screen.refresh()
+    
+    def on(self):
+        while self.snake.is_alive:
+            self.render_score()
             self.render_point()
             self.render_snake()
 
@@ -45,14 +52,15 @@ class Game():
                 self.score.generate_point()
                 self.score.increase()
                 self.snake.increase_length()
-            
+
+            self.screen.refresh() 
             self.screen.clear()
-            curses.napms(200)
+            curses.flushinp()
+            curses.napms(100)
 
-    #def off(self):
-    #   #end game
+    #def exit(self):
 
-    #def restart(self):
+    #def reset(self):
     #    #restart game
 
 game = Game()

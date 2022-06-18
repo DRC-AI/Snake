@@ -8,9 +8,9 @@ class Snake():
         self.max_width = max_width
         self.position_y = max_height // 2
         self.position_x = max_width // 2 
-        self.body = [ [self.position_x, self.position_y], [self.position_x - 1, self.position_y  ] ]
-        self.head = (self.body[0][0], self.body[0][1])
-        self.direction = curses.KEY_UP
+        self.body = [[self.position_x, self.position_y], [self.position_x-1, self.position_y]]
+        self.head = self.body[0]
+        self.direction = curses.KEY_LEFT
         self.is_alive = True
     
     def reversed(self, key):
@@ -45,14 +45,24 @@ class Snake():
         
     def move_forward(self):
 
+        if self.position_x < 0:
+            self.position_x = self.max_width
+        elif self.position_x > self.max_width:
+            self.position_x = -1
+
+        elif self.position_y < 0:
+            self.position_y = self.max_height
+        elif self.position_y > self.max_height:
+            self.position_y = -1
+
         if self.direction == curses.KEY_LEFT:
-            self.position_x = self.position_x - 1
+            self.position_x = self.position_x -1
         elif self.direction == curses.KEY_RIGHT:
-            self.position_x = self.position_x + 1
+            self.position_x = self.position_x +1
         elif self.direction == curses.KEY_UP:
-            self.position_y = self.position_y - 1
+            self.position_y = self.position_y -1
         elif self.direction == curses.KEY_DOWN:
-            self.position_y = self.position_y + 1
+            self.position_y = self.position_y +1
 
         newHead = [self.position_x,self.position_y]
         
@@ -68,15 +78,8 @@ class Snake():
 
         return self.body
         
-    def collision_check(self):
-        
-        head = self.body[1]
-        position_x = head[0]
-        position_y = head[1]
+    def canbibal(self):
 
-        if head in self.body[1:]:
+        if self.head in self.body[1:]:
             return True
-        else:
-            return False
-    
-
+        
