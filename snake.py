@@ -2,109 +2,81 @@ import curses
 
 class Snake():
 
-    def __init__(self, game_window):
-        '''Sets default settings to snake object'''
+    def __init__(self, max_height, max_width):
 
-        self.positiony, self.positionx = game_window.getmaxyx()
+        self.max_height = max_height
+        self.max_width = max_width
+        self.position_y = max_height // 2
+        self.position_x = max_width // 2 
+        self.body = [ [self.position_x, self.position_y], [self.position_x - 1, self.position_y  ] ]
+        self.head = (self.body[0][0], self.body[0][1])
+        self.direction = curses.KEY_UP
+        self.is_alive = True
+    
+    def reversed(self, key):
 
-        #centers the position of snake to middle of passed window
-        self.positiony = self.positiony // 2
-        self.positionx = self.positionx // 2 
-
-        #initializes the snake body list using its position properties
-        self.body = [ [self.positionx, self.positiony], [self.positionx - 1, self.positiony  ] ]
-        #initializes direction
-        self.direction = ""
-
-        #initializes isAlive property to True
-        self.isAlive = True
-
-        #initializes game_window property to passed window
-        self.game_window = game_window
-
-    def checkIfBackwards(self, keypress) :
-        '''Makes sure the user cant reverse direction,
-        and can only turn or continue forward.'''
-
-        notAllowed = {
-                curses.KEY_UP : curses.KEY_DOWN,
-                curses.KEY_DOWN : curses.KEY_UP,
-                curses.KEY_RIGHT : curses.KEY_LEFT,
-                curses.KEY_LEFT : curses.KEY_RIGHT
+        reverse_check = {
+            curses.KEY_UP : curses.KEY_DOWN,
+            curses.KEY_DOWN : curses.KEY_UP,
+            curses.KEY_RIGHT : curses.KEY_LEFT,
+            curses.KEY_LEFT : curses.KEY_RIGHT
                 }
         
-        if keypress == notAllowed.get(self.direction):
-            return False
-        else:
-            return True
-
-    def updateDirection(self, keypress):
-        '''Used to update direction of head.
-        Needs keypress in curse.KEY_DIRECTION format.'''
-
-        #Only updates if key i valid
-        validKeys = [ curses.KEY_LEFT,curses.KEY_RIGHT, curses.KEY_UP, curses.KEY_DOWN ]
+        return key == reverse_check.get(self.direction)
+    
+    def valid_key(self, key):
         
-        if self.checkIfBackwards(keypress):
+        valid_keys = [
+            curses.KEY_LEFT,
+            curses.KEY_RIGHT,
+            curses.KEY_UP,
+            curses.KEY_DOWN
+                ]
+        
+        return key in valid_keys
 
-            if keypress not in validKeys:
-                return self.direction
-            else :
-                self.direction = keypress
-                return self.direction
+    def update_direction(self, key):
+
+        if not self.reversed(key) and self.valid_key(key):
+            self.direction = key
+            return self.direction
         else:
             return self.direction
-
-    def moveForward(self):
-        '''Makes the snake move forward 1 step in the facing direction
-        and updates the body list'''
         
+    def move_forward(self):
+
         if self.direction == curses.KEY_LEFT:
-            self.positionx = self.positionx - 1
+            self.position_x = self.position_x - 1
         elif self.direction == curses.KEY_RIGHT:
-            self.positionx = self.positionx + 1
+            self.position_x = self.position_x + 1
         elif self.direction == curses.KEY_UP:
-            self.positiony = self.positiony - 1
+            self.position_y = self.position_y - 1
         elif self.direction == curses.KEY_DOWN:
-            self.positiony = self.positiony + 1
+            self.position_y = self.position_y + 1
 
-        self.updateBodyPos(self.positionx, self.positiony)
-
-    def updateBodyPos(self, x, y ):
-        '''Adds new position as head of body and removes last element in body list'''
-
-        newHead = [x,y]
+        newHead = [self.position_x,self.position_y]
         
-        self.body.insert( 0, newHead ) #inserts new head
-        self.body.pop(-1) #removes last element
+        self.head = newHead
+        self.body.insert(0, newHead) 
+        self.body.pop(-1)
 
-    def increaseBodyLength(self):
-        '''Used in conjution with a point increase.
-        adds a copy of the last element in body list'''
+        return self.body
+
+    def increase_length(self):
 
         self.body.insert(-1, self.body[-1])
 
-    def move(self, keypress):
-        '''Executes the the ingame snake logic to for the renderer to use.'''
-
-        self.updateDirection(keypress)
-        self.moveForward()
+        return self.body
         
-    def render(self):
-        '''renders snake in the passed window object'''
+    def collision_check(self):
+        
+        head = self.body[1]
+        position_x = head[0]
+        position_y = head[1]
 
-        for part in self.body:
-            self.game_window.addstr(part[1], part[0], chr(11035), curses.A_REVERSE)
+        if head in self.body[1:]:
+            return True
+        else:
+            return False
+    
 
-    def canibalCheck(self):
-        if self.body[0] in self.body[1:]:
-            self.isAlive = False
-
-    def isContained(self):
-        '''Check if snake head is cointaned, returns False if out of bounds'''
-
-        windowHeight, windowWidth = self.game_window.getmaxyx()
-        if self.body[0][0] < 1 or self.body[0][0] > windowWidth - 2:
-            self.isAlive = False
-        if self.body[0][1] < 1 or self.body[0][1] > windowHeight - 2:
-            self.isAlive = False
