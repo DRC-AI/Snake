@@ -8,6 +8,8 @@ exiting the game exept using ctrl + c and the snake can still pass trough itself
 
 Missing features are:
 
+ * Snake canibalism check
+
  * Locally stored leaderboard system.
 
  * Functioning menu.
