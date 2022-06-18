@@ -1,28 +1,29 @@
 import curses
+from enum import Enum
+
+class States(Enum):
+    ON = 1 
+    OFF = 2
+    RESTART = 3
 
 class Menu():
     def __init__(self, window):
 
-        self.menuItems = [ "Try Again", "Exit" ]
-
-        self.window = window
         self.selector = 0 #indicates wich button is selected
     
-    def run_action(self):
-        '''Runs associated action for menu item'''
+    def run_action(self, action):
         
         menuActions = {
-                "Try Again" : self.tryAgain,
-                "Exit" : self.exit
+                "Try Again" : game.on,
+                "Exit" : exit()
                 }
-        game = menuActions[self.menuItems[self.selector]]()
-        return game
+
+        menuActions[action]()
 
     def display_menu(self):
-        '''Displays menu in provided window'''
 
-        y, x  = self.window.getmaxyx()
-            
+        y, x = self.window.getmaxyx()
+
         middle_y = y // 2
         middle_x = x // 2
 
@@ -33,7 +34,6 @@ class Menu():
                 self.window.addstr( middle_y + self.menuItems.index(i), middle_x - (len(i) // 2), i)
 
     def update_selector(self, keypress):
-        '''updates selector'''
         
         if keypress == curses.KEY_UP:
             self.selector = self.selector - 1
@@ -46,9 +46,8 @@ class Menu():
                 self.selector = len(self.menuItems) - 1
 
     def render(self, keypress):
-        '''Renders menu and handles input inside passed window object'''
-        if keypress == 10:
-            return self.runAction()
-        self.updateSelector(keypress)
-        self.displayMenu()
 
+        if keypress == 10:
+            return self.run_action()
+        self.update_selector(keypress)
+        self.display_menu()
