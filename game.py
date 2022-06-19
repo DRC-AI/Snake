@@ -89,8 +89,12 @@ class Game():
                 self.score.generate_point()
                 self.score.increase(combo)
                 self.snake.increase_length()
-                timer = 50
+                timer = 100
                 combo += 1 
+                speed = int(speed * 0.95)
+                if combo >= 10:
+                    combo = 10
+                    speed = 50
             
             if self.snake.canbibal():
                 while True:
@@ -103,7 +107,6 @@ class Game():
 
             if timer > 0:
                 timer = timer - 1
-                speed = 60
             else:
                 speed = 100
                 combo = 1 
