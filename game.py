@@ -32,7 +32,6 @@ class Game():
         
     def render_point(self):
         
-        self.screen.refresh()
         self.screen.addch(self.score.position_y, self.score.position_x, "*")
     
     def render_score(self):
@@ -45,6 +44,15 @@ class Game():
 
         middle_y = self.max_height // 2
         middle_x = self.max_width // 2
+
+        game_over_message = "Game Over"
+        game_over_score = "Score: "  + str(self.score.score)
+
+        try:
+            self.screen.addstr(middle_y - 4, (middle_x-len(game_over_message)//2), game_over_message)
+            self.screen.addstr(middle_y - 3, (middle_x-len(game_over_score)//2), game_over_score)
+        except:
+            pass
 
         for i in self.menu.items:
             try:

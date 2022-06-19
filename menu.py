@@ -9,28 +9,26 @@ class Menu():
         self.selector = 0
 
         self.items = ["restart" ,
-                      "leaderboard",
                       "exit"]
     
     def run_action(self):
         
-        menuActions = {
+        menu_actions = {
                 "restart" : self.game.restart,
-                "leaderboard" : exit,
                 "exit" : exit
                 }
 
         action = self.items[self.selector]
-        menuActions[action]()
+        menu_actions[action]()
 
-    def update_selector(self, keypress):
+    def update_selector(self, key):
         
-        if keypress == curses.KEY_UP:
+        if key == curses.KEY_UP:
             self.selector = self.selector - 1
             if self.selector < 0 :
                 self.selector = 0
 
-        elif keypress == curses.KEY_DOWN:
+        elif key == curses.KEY_DOWN:
             self.selector = self.selector + 1
             if self.selector > len(self.items) - 1:
                 self.selector = len(self.items) - 1
