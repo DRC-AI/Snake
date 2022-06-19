@@ -1,6 +1,7 @@
 import curses
 from snake import Snake
 from score import Score
+from menu import Menu
 
 class Game():
 
@@ -15,6 +16,7 @@ class Game():
         self.max_height, self.max_width = self.screen.getmaxyx()
         self.snake = Snake(self.max_height, self.max_width)
         self.score = Score(self.max_height, self.max_width)
+        self.menu = Menu(self.max_height, self.max_width, self)
 
     def render_snake(self):
         
@@ -38,8 +40,29 @@ class Game():
         score_message = "Score: " + str(self.score.score)
         self.screen.addstr(0,0, score_message)
         self.screen.refresh()
-    
+
+    def render_menu(self):
+
+        middle_y = self.max_height // 2
+        middle_x = self.max_width // 2
+
+        for i in self.menu.items:
+            try:
+                if self.menu.selector == self.menu.items.index(i):
+                    self.screen.addstr( middle_y + self.menu.items.index(i), middle_x - (len(i) // 2), i.capitalize(), curses.A_REVERSE)
+                else:
+                    self.screen.addstr( middle_y + self.menu.items.index(i), middle_x - (len(i) // 2), i.capitalize())
+            except:
+                continue
+        
+        key = self.screen.getch()
+        self.menu.update_selector(key)
+        
+        if key == 10: #enter
+            self.menu.run_action()
+
     def on(self):
+
         while self.snake.is_alive:
             self.render_score()
             self.render_point()
@@ -52,15 +75,20 @@ class Game():
                 self.score.generate_point()
                 self.score.increase()
                 self.snake.increase_length()
+            
+            if self.snake.canbibal():
+                while True:
+                    self.render_menu()
 
             self.screen.refresh() 
             self.screen.clear()
             curses.flushinp()
             curses.napms(100)
+    
+    def restart(self):
+        self.snake = Snake(self.max_height, self.max_width)
+        self.score = Score(self.max_height, self.max_width)
+        self.on()
 
-    #def exit(self):
-
-    #def reset(self):
-    #    #restart game
 
 game = Game()

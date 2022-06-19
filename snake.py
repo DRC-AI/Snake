@@ -21,7 +21,6 @@ class Snake():
             curses.KEY_RIGHT : curses.KEY_LEFT,
             curses.KEY_LEFT : curses.KEY_RIGHT
                 }
-        
         return key == reverse_check.get(self.direction)
     
     def valid_key(self, key):
@@ -32,7 +31,6 @@ class Snake():
             curses.KEY_UP,
             curses.KEY_DOWN
                 ]
-        
         return key in valid_keys
 
     def update_direction(self, key):
@@ -50,7 +48,7 @@ class Snake():
         elif self.position_x > self.max_width:
             self.position_x = -1
 
-        elif self.position_y < 0:
+        if self.position_y < 0:
             self.position_y = self.max_height
         elif self.position_y > self.max_height:
             self.position_y = -1
@@ -80,6 +78,5 @@ class Snake():
         
     def canbibal(self):
 
-        if self.head in self.body[1:]:
-            return True
+        return self.head in self.body[1:]
         

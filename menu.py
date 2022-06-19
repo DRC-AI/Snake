@@ -1,37 +1,27 @@
 import curses
-from enum import Enum
-
-class States(Enum):
-    ON = 1 
-    OFF = 2
-    RESTART = 3
 
 class Menu():
-    def __init__(self, window):
+    def __init__(self, max_height, max_width, game):
 
-        self.selector = 0 #indicates wich button is selected
+        self.game = game
+        self.max_height = max_height
+        self.max_width = max_width
+        self.selector = 0
+
+        self.items = ["restart" ,
+                      "leaderboard",
+                      "exit"]
     
-    def run_action(self, action):
+    def run_action(self):
         
         menuActions = {
-                "Try Again" : game.on,
-                "Exit" : exit()
+                "restart" : self.game.restart,
+                "leaderboard" : exit,
+                "exit" : exit
                 }
 
+        action = self.items[self.selector]
         menuActions[action]()
-
-    def display_menu(self):
-
-        y, x = self.window.getmaxyx()
-
-        middle_y = y // 2
-        middle_x = x // 2
-
-        for i in self.menuItems:
-            if self.selector == self.menuItems.index(i):
-                self.window.addstr( middle_y + self.menuItems.index(i), middle_x - (len(i) // 2), i, curses.A_REVERSE)
-            else:
-                self.window.addstr( middle_y + self.menuItems.index(i), middle_x - (len(i) // 2), i)
 
     def update_selector(self, keypress):
         
@@ -42,12 +32,5 @@ class Menu():
 
         elif keypress == curses.KEY_DOWN:
             self.selector = self.selector + 1
-            if self.selector > len(self.menuItems) - 1:
-                self.selector = len(self.menuItems) - 1
-
-    def render(self, keypress):
-
-        if keypress == 10:
-            return self.run_action()
-        self.update_selector(keypress)
-        self.display_menu()
+            if self.selector > len(self.items) - 1:
+                self.selector = len(self.items) - 1
