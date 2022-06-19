@@ -34,10 +34,12 @@ class Game():
         
         self.screen.addch(self.score.position_y, self.score.position_x, "*")
     
-    def render_score(self):
+    def render_score(self, combo):
         
         score_message = "Score: " + str(self.score.score)
+        combo_message = "Combo: X" + str(combo)
         self.screen.addstr(0,0, score_message)
+        self.screen.addstr(1,0, combo_message)
         self.screen.refresh()
 
     def render_menu(self):
@@ -71,8 +73,12 @@ class Game():
 
     def on(self):
 
+        speed = 100
+        timer = 0
+        combo = 1
+
         while self.snake.is_alive:
-            self.render_score()
+            self.render_score(combo)
             self.render_point()
             self.render_snake()
 
@@ -81,8 +87,10 @@ class Game():
 
             if head == point:
                 self.score.generate_point()
-                self.score.increase()
+                self.score.increase(combo)
                 self.snake.increase_length()
+                timer = 50
+                combo += 1 
             
             if self.snake.canbibal():
                 while True:
@@ -91,7 +99,14 @@ class Game():
             self.screen.refresh() 
             self.screen.clear()
             curses.flushinp()
-            curses.napms(100)
+            curses.napms(speed)
+
+            if timer > 0:
+                timer = timer - 1
+                speed = 60
+            else:
+                speed = 100
+                combo = 1 
     
     def restart(self):
         self.snake = Snake(self.max_height, self.max_width)

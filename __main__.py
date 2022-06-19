@@ -6,6 +6,5 @@ from score import *
 from game import *
 
 def main(screen):
-    while True:
         game.on()
 wrapper(main) 
