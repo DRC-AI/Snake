@@ -1,6 +1,6 @@
 import curses
 
-class Menu():
+class Menu:
     def __init__(self, max_height, max_width, game):
 
         self.game = game

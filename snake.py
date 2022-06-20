@@ -1,6 +1,6 @@
 import curses 
 
-class Snake():
+class Snake:
 
     def __init__(self, max_height, max_width):
 

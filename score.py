@@ -1,6 +1,6 @@
 import random
 
-class Score():
+class Score:
 
     def __init__(self, max_height, max_width):
 

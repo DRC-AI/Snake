@@ -3,7 +3,7 @@ from snake import Snake
 from score import Score
 from menu import Menu
 
-class Game():
+class Game:
 
     def __init__(self):
         
