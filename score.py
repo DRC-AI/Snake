@@ -14,7 +14,7 @@ class Score():
 
         base_score = 100
         combo_score = base_score * combo
-        self.score = self.score + combo_score
+        self.score = int(self.score + combo_score)
     
     def get_position(self):
 

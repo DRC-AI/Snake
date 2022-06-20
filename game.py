@@ -11,8 +11,8 @@ class Game():
         self.screen.keypad(True)
         curses.curs_set(0)
         curses.noecho()
-
         self.screen.nodelay(True)
+
         self.max_height, self.max_width = self.screen.getmaxyx()
         self.snake = Snake(self.max_height, self.max_width)
         self.score = Score(self.max_height, self.max_width)
@@ -36,10 +36,8 @@ class Game():
     
     def render_score(self, combo):
         
-        score_message = "Score: " + str(self.score.score)
-        combo_message = "Combo: X" + str(combo)
+        score_message = "Score: " + str(self.score.score) + " | " + str(combo) + "x"
         self.screen.addstr(0,0, score_message)
-        self.screen.addstr(1,0, combo_message)
         self.screen.refresh()
 
     def render_menu(self):
@@ -90,10 +88,11 @@ class Game():
                 self.score.increase(combo)
                 self.snake.increase_length()
                 timer = 100
-                combo += 1 
+                combo += 0.1
+                combo = round(combo,1)
                 speed = int(speed * 0.95)
-                if combo >= 10:
-                    combo = 10
+                if combo >= 2:
+                    combo = 2
                     speed = 50
             
             if self.snake.canbibal():
@@ -115,6 +114,5 @@ class Game():
         self.snake = Snake(self.max_height, self.max_width)
         self.score = Score(self.max_height, self.max_width)
         self.on()
-
 
 game = Game()
