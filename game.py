@@ -11,8 +11,8 @@ class Game():
         self.screen.keypad(True)
         curses.curs_set(0)
         curses.noecho()
-
         self.screen.nodelay(True)
+
         self.max_height, self.max_width = self.screen.getmaxyx()
         self.snake = Snake(self.max_height, self.max_width)
         self.score = Score(self.max_height, self.max_width)
@@ -34,9 +34,9 @@ class Game():
         
         self.screen.addch(self.score.position_y, self.score.position_x, "*")
     
-    def render_score(self):
+    def render_score(self, combo):
         
-        score_message = "Score: " + str(self.score.score)
+        score_message = "Score: " + str(self.score.score) + " | " + str(combo) + "x"
         self.screen.addstr(0,0, score_message)
         self.screen.refresh()
 
@@ -71,8 +71,10 @@ class Game():
 
     def on(self):
 
+        counter = 0 
+
         while self.snake.is_alive:
-            self.render_score()
+            self.render_score(self.score.combo)
             self.render_point()
             self.render_snake()
 
@@ -81,8 +83,15 @@ class Game():
 
             if head == point:
                 self.score.generate_point()
-                self.score.increase()
+                self.score.increase(self.score.combo)
                 self.snake.increase_length()
+                counter = 100
+                self.score.combo += 0.1
+                self.score.combo = round(self.score.combo,1)
+                self.snake.speed = int(self.snake.speed * 0.95)
+                if self.score.combo >= 2:
+                    self.score.combo = 2
+                    self.snake.speed = 50
             
             if self.snake.canbibal():
                 while True:
@@ -91,12 +100,17 @@ class Game():
             self.screen.refresh() 
             self.screen.clear()
             curses.flushinp()
-            curses.napms(100)
+            curses.napms(self.snake.speed)
+
+            if counter > 0:
+                counter = counter - 1
+            else:
+                self.snake.speed = 100
+                self.score.combo = 1 
     
     def restart(self):
         self.snake = Snake(self.max_height, self.max_width)
         self.score = Score(self.max_height, self.max_width)
         self.on()
-
 
 game = Game()
