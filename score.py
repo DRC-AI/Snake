@@ -11,10 +11,10 @@ class Score():
         self.score = 0
         self.combo = 1 
 
-    def increase(self, combo):
+    def increase(self):
 
         base_score = 100
-        combo_score = base_score * combo
+        combo_score = base_score * self.combo
         self.score = int(self.score + combo_score)
     
     def get_position(self):

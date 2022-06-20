@@ -34,9 +34,9 @@ class Game():
         
         self.screen.addch(self.score.position_y, self.score.position_x, "*")
     
-    def render_score(self, combo):
+    def render_score(self):
         
-        score_message = "Score: " + str(self.score.score) + " | " + str(combo) + "x"
+        score_message = "Score: " + str(self.score.score) + " | " + str(self.score.combo) + "x"
         self.screen.addstr(0,0, score_message)
         self.screen.refresh()
 
@@ -74,7 +74,7 @@ class Game():
         counter = 0 
 
         while self.snake.is_alive:
-            self.render_score(self.score.combo)
+            self.render_score()
             self.render_point()
             self.render_snake()
 
@@ -83,12 +83,12 @@ class Game():
 
             if head == point:
                 self.score.generate_point()
-                self.score.increase(self.score.combo)
+                self.score.increase()
                 self.snake.increase_length()
-                counter = 100
                 self.score.combo += 0.1
                 self.score.combo = round(self.score.combo,1)
                 self.snake.speed = int(self.snake.speed * 0.95)
+                counter = 100
                 if self.score.combo >= 2:
                     self.score.combo = 2
                     self.snake.speed = 50
