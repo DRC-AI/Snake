@@ -9,6 +9,7 @@ class Score():
         self.position_x = random.randint(1, self.max_width -1)
         self.position_y = random.randint(1, self.max_height -1)
         self.score = 0
+        self.combo = 1 
 
     def increase(self, combo):
 

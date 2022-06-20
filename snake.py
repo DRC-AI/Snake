@@ -6,13 +6,16 @@ class Snake():
 
         self.max_height = max_height
         self.max_width = max_width
+
         self.position_y = max_height // 2
         self.position_x = max_width // 2 
+
         self.body = [[self.position_x, self.position_y], [self.position_x-1, self.position_y]]
         self.head = self.body[0]
         self.direction = curses.KEY_LEFT
         self.is_alive = True
-    
+        self.speed = 100
+
     def reversed(self, key):
 
         reverse_check = {
