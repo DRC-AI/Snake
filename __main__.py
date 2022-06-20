@@ -6,5 +6,5 @@ from score import *
 from game import *
 
 def main(screen):
-        game.on() #test
+        game.on()
 wrapper(main) 
